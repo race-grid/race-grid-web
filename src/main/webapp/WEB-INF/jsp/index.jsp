@@ -6,29 +6,27 @@
     <meta charset="UTF-8">
     <title>Race Grid</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
-    <script src="index.js"></script>
+
+    <script src="node_modules/core-js/client/shim.min.js"></script>
+    <script src="node_modules/zone.js/dist/zone.js"></script>
+    <script src="node_modules/reflect-metadata/Reflect.js"></script>
+    <script src="node_modules/systemjs/dist/system.src.js"></script>
+
+    <script src="systemjs.config.js"></script>
+    <script>
+        System.import('app');
+    </script>
+
 </head>
 
+<html>
+
+<!-- 3. Display the application -->
 <body>
-<h1> Race Grid </h1>
 
-<p>
-    <span>Users: </span>
-    <span id="users"></span>
-</p>
-
-<p>
-    <input type="text" id="name-input"/>
-    <button id="name-button"> <- Create new</button>
-</p>
-
-<p id="status"></p>
+<app>Loading...</app>
 
 </body>
-
-<script>
-    var apiUrl = '${indexModel.apiUrl}';
-    init(apiUrl);
-</script>
+</html>
 
 </html>
