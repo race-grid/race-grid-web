@@ -1,11 +1,22 @@
-import { Component } from '@angular/core';
+import {Component, Input} from '@angular/core';
+import {SessionComponent} from "../session/session.component";
 
 @Component({
     selector: 'header',
     template: `
-        <div>
-            <h1>header here</h1>
-        </div>`
+        <p></p>
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="pull-right">
+                    <ng-content></ng-content>
+                </div>
+                <h1>{{title}}</h1>
+            </div>
+        </div>
+        <hr>`,
+    directives: [SessionComponent]
 })
 
-export class HeaderComponent { }
+export class HeaderComponent {
+    @Input() title: string;
+}

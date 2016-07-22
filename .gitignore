@@ -5,3 +5,4 @@ target/
 *.js.map
 **/typings
 **/node_modules
+**/node
