@@ -13,4 +13,10 @@ export interface Session {
     userName: string;
     userId: string;
     userHash: string;
+    gameId?: string;
+}
+
+export interface Game {
+    id: string;
+    users: User[];
 }

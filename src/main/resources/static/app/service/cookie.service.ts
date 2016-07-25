@@ -2,9 +2,14 @@ import {Injectable} from '@angular/core';
 import 'rxjs/add/operator/toPromise';
 import {CookieService} from "angular2-cookie/core";
 
-const USERNAME = 'userName';
-const USERID = 'userId';
-const USERHASH = 'userHash';
+type CookieKey = 'userName' | 'userId' | 'userHash' | 'gameId';
+
+export class RacegridCookie {
+    static USER_NAME: CookieKey = 'userName';
+    static USER_ID: CookieKey = 'userId';
+    static USER_HASH: CookieKey = 'userHash';
+    static GAME_ID: CookieKey = 'gameId';
+}
 
 @Injectable()
 export class RacegridCookieService {
@@ -13,39 +18,15 @@ export class RacegridCookieService {
     constructor(private cookieService: CookieService) {
     }
 
-    setUserName(userName: string): void {
-        this.cookieService.put(USERNAME, userName);
+    put(key: CookieKey, value: any) {
+        this.cookieService.put(key, value);
     }
 
-    getUserName(): string {
-        return this.cookieService.get(USERNAME);
+    get(key: CookieKey): string {
+        return this.cookieService.get(key);
     }
 
-    removeUserName(): void {
-        this.cookieService.remove(USERNAME);
-    }
-
-    setUserId(userId: string): void {
-        this.cookieService.put(USERID, userId);
-    }
-
-    getUserId(): string {
-        return this.cookieService.get(USERID);
-    }
-
-    removeUserId(): void {
-        this.cookieService.remove(USERID);
-    }
-
-    setUserHash(userHash: string): void {
-        this.cookieService.put(USERHASH, userHash);
-    }
-
-    getUserHash(): string {
-        return this.cookieService.get(USERHASH);
-    }
-
-    removeUserHash(): void {
-        this.cookieService.remove(USERHASH);
+    remove(key: CookieKey): void {
+        this.cookieService.remove(key);
     }
 }

@@ -24,4 +24,15 @@ public class WebController {
         return "index";
     }
 
+    @RequestMapping("/home")
+    public String redirectHome() {
+        return "redirect:/";
+    }
+
+    @RequestMapping("/game")
+    public String redirectGame() {
+        return "redirect:/";
+    }
+
+
 }

@@ -1,4 +1,5 @@
-import {Component} from '@angular/core';
+import {Component, Output} from '@angular/core';
+import {EventEmitter} from "@angular/compiler/src/facade/async";
 
 @Component({
     selector: 'new-game',
@@ -7,15 +8,14 @@ import {Component} from '@angular/core';
                     <div class="col-xs-12">
                         <div class="well well-sm">
                             Start playing
-                            <button class="btn btn-default">vs AI</button>
+                            <button (click)="newVsAi.emit()" class="btn btn-default">vs AI</button>
                             <button class="btn btn-default disabled">vs players</button>
                         </div>
                     </div>
                 </div>
-    `,
-    providers: []
+    `
 })
 
 export class NewGameComponent {
-
+    @Output() newVsAi = new EventEmitter<void>();
 }

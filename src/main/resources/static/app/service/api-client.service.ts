@@ -1,12 +1,13 @@
 import {Injectable} from '@angular/core';
-import {Http} from '@angular/http';
+import {Http, Response} from '@angular/http';
 import 'rxjs/add/operator/toPromise';
-import {NewUserResponse} from "../common";
+import {NewUserResponse, Session} from "../common";
 
 @Injectable()
 export class ApiClientService {
 
-    API_URL = 'https://racegrid-api.herokuapp.com/api';
+    API_URL = 'http://localhost:8082/api';
+    //API_URL = 'https://racegrid-api.herokuapp.com/api';
 
     constructor(private http: Http) {
     }
@@ -15,6 +16,11 @@ export class ApiClientService {
         return this.http.get(this.API_URL + url)
             .toPromise()
             .then(res => res.json());
+    }
+
+    private post(url: string): Promise<Response> {
+        return this.http.post(this.API_URL + url, null)
+            .toPromise();
     }
 
     getGames(): Promise<any[]> {
@@ -26,8 +32,7 @@ export class ApiClientService {
     }
 
     createUser(name: string): Promise<NewUserResponse> {
-        return this.http.post(this.API_URL + '/create-user?name=' + name, null)
-            .toPromise()
+        return this.post('/create-user?name=' + name)
             .then(res => res.json());
     }
 
@@ -36,7 +41,14 @@ export class ApiClientService {
     }
 
     removeUser(userId: string, userHash: string): Promise<any> {
-        return this.http.post(this.API_URL + '/remove-user?userId=' + userId + '&userHash=' + userHash, null)
-            .toPromise();
+        return this.post('/remove-user?userId=' + userId + '&userHash=' + userHash);
+    }
+
+    newGameVsAi(session: Session, numOpponents: number): Promise<string> {
+        return this.post('/new-game-vs-ai?userId=' + session.userId + '&userHash=' + session.userHash + '&numOpponents=' + numOpponents)
+            .then(response => {
+                let data = response.json();
+                return response.json()
+            });
     }
 }

@@ -2,7 +2,7 @@ import {Injectable, OnInit} from '@angular/core';
 import 'rxjs/add/operator/toPromise';
 import {OverviewService} from "./overview.service";
 import {Subject} from "rxjs/Rx";
-import {RacegridCookieService} from "./cookie.service";
+import {RacegridCookieService, RacegridCookie} from "./cookie.service";
 import {Session} from "../common";
 
 
@@ -10,9 +10,7 @@ import {Session} from "../common";
 export class SessionService {
 
     session: Session;
-    loggedIn$: Subject<string> = new Subject<string>();
-    loggedOut$: Subject<void> = new Subject<void>();
-
+    sessionChange$: Subject<Session> = new Subject<Session>();
 
     constructor(private cookieService: RacegridCookieService,
                 private overviewService: OverviewService) {
@@ -20,14 +18,16 @@ export class SessionService {
     }
 
     init() {
-        let userName = this.cookieService.getUserName();
-        let userId = this.cookieService.getUserId();
-        let userHash = this.cookieService.getUserHash();
+        let userName = this.cookieService.get(RacegridCookie.USER_NAME);
+        let userId = this.cookieService.get(RacegridCookie.USER_ID);
+        let userHash = this.cookieService.get(RacegridCookie.USER_HASH);
+        let gameId = this.cookieService.get(RacegridCookie.GAME_ID);
         if (userName) {
             this.session = {
                 userName: userName,
                 userId: userId,
-                userHash: userHash
+                userHash: userHash,
+                gameId: gameId
             }
         }
     }
@@ -37,24 +37,34 @@ export class SessionService {
     }
 
     setLoggedIn(userName: string, userId: string, userHash: string) {
-        this.cookieService.setUserName(userName);
-        this.cookieService.setUserId(userId);
-        this.cookieService.setUserHash(userHash);
+        this.cookieService.put(RacegridCookie.USER_NAME, userName);
+        this.cookieService.put(RacegridCookie.USER_ID, userId);
+        this.cookieService.put(RacegridCookie.USER_HASH, userHash);
         this.session = {
             userName: userName,
             userId: userId,
             userHash: userHash
         };
         this.overviewService.updateUsers();
-        this.loggedIn$.next(userName);
+        this.sessionChange$.next(this.session);
     }
 
     setLoggedOut(): void {
-        this.cookieService.removeUserName();
-        this.cookieService.removeUserId();
-        this.cookieService.removeUserHash();
+        this.cookieService.remove(RacegridCookie.USER_NAME);
+        this.cookieService.remove(RacegridCookie.USER_ID);
+        this.cookieService.remove(RacegridCookie.USER_HASH);
         this.session = null;
         this.overviewService.updateUsers();
-        this.loggedOut$.next(null);
+        this.sessionChange$.next(null);
+    }
+
+    setInGame(gameId: string): void {
+        this.session.gameId = gameId;
+        this.cookieService.put(RacegridCookie.GAME_ID, gameId);
+    }
+
+    setNotInGame(): void {
+        this.session.gameId = null;
+        this.cookieService.remove(RacegridCookie.GAME_ID);
     }
 }

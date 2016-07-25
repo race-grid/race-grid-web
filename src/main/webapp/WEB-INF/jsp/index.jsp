@@ -1,8 +1,8 @@
 <%--@elvariable id="indexModel" type="racegrid.web.model.IndexModel"--%>
-
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
+    <base href="/">
     <meta charset="UTF-8">
     <title>Race Grid</title>
 
@@ -22,9 +22,6 @@
 
 </head>
 
-<html>
-
-<!-- 3. Display the application -->
 <body>
 
 <app>
@@ -36,10 +33,8 @@
             </div>
         </div>
     </div>
-
 </app>
 
 </body>
-</html>
 
 </html>

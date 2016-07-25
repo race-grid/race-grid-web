@@ -6,65 +6,63 @@ import {SessionComponent} from "./session/session.component";
 import {CountListComponent} from "./count-list/count-list.component";
 import {ApiClientService} from "./service/api-client.service";
 import {NewUserResponse, Session} from "./common";
-import {OverviewService} from "./service/overview.service";
+import {ROUTER_DIRECTIVES} from "@angular/router";
+import {HomeComponent} from "./home/home.component";
+import {GameComponent} from "./game/game.component";
 
 @Component({
     selector: 'app',
     template: `
         <div class="container">
+            
             <header title="Race-grid">
                 <session [userName]="session? session.userName : ''" 
                     [isLoggedIn]="session != null"
                     (onLogin)="onLogin($event)"
                     (onLogout)="onLogout()">
-            </session>
+                </session>
             </header>
-            <new-game *ngIf="session != null"></new-game>
+            
             <div class="row">
-                <div class="col-xs-4">
-                    <count-list [items]="games" title="Games"></count-list>
-                </div>
-                <div class="col-xs-4">
-                    <count-list [items]="lobbies" title="Lobbies"></count-list>
-                </div>
-                <div class="col-xs-4">
-                    <count-list [items]="users" title="Users"></count-list>
+                <div class="col-xs-12">
+                    <ul class="nav nav-tabs">
+                        <li [routerLinkActive]="['active']"> 
+                            <a routerLink="/home">Home</a>
+                        </li>
+                        <li *ngIf="session && session.gameId" [routerLinkActive]="['active']">
+                            <a routerLink="/game">Game</a>
+                        </li>
+                    </ul> 
                 </div>
             </div>
-           
-            <overview></overview>
+            
+            <p></p>
+            
+            <router-outlet></router-outlet>
+            
         </div>
     `,
     directives: [HeaderComponent,
         NewGameComponent,
         SessionComponent,
-        CountListComponent]
+        CountListComponent,
+        ROUTER_DIRECTIVES
+    ],
+    precompile: [
+        HomeComponent,
+        GameComponent
+    ]
 })
-
 export class AppComponent implements OnInit {
 
     session: Session;
-    games: string[] = [];
-    users: string[] = [];
-    lobbies: string[] = [];
 
     constructor(private sessionService: SessionService,
-                private overviewService: OverviewService,
                 private apiClient: ApiClientService) {
     }
 
     ngOnInit() {
         this.session = this.sessionService.getSession();
-
-        this.overviewService.gamesChange$.subscribe(games => {
-            this.games = games;
-        });
-        this.overviewService.lobbiesChange$.subscribe(lobbies => {
-            this.lobbies = lobbies;
-        });
-        this.overviewService.usersChange$.subscribe(users => {
-            this.users = users;
-        });
     }
 
     onLogin(userName: string) {
@@ -77,11 +75,11 @@ export class AppComponent implements OnInit {
     }
 
     onLogout() {
-        this.apiClient.removeUser(this.session.userId, this.session.userHash).then(() => {
+        this.apiClient.removeUser(this.session.userId, this.session.userHash).catch(() => {
+        }).then(() => {
             this.sessionService.setLoggedOut();
             this.session = null;
         });
-
     }
 
 }
