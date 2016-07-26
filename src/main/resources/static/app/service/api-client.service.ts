@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {Http, Response} from '@angular/http';
 import 'rxjs/add/operator/toPromise';
-import {NewUserResponse, Session} from "../common";
+import {NewUserResponse, Session, RaceTrack} from "../common";
 
 @Injectable()
 export class ApiClientService {
@@ -50,5 +50,9 @@ export class ApiClientService {
                 let data = response.json();
                 return response.json()
             });
+    }
+
+    getTrackData(gameId: string): Promise<RaceTrack> {
+        return this.get('/track-data?gameId=' + gameId);
     }
 }

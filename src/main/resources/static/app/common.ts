@@ -14,9 +14,28 @@ export interface Session {
     userId: string;
     userHash: string;
     gameId?: string;
+    raceTrack?: RaceTrack;
 }
 
 export interface Game {
     id: string;
     users: User[];
+}
+
+export interface Line {
+    from: Vector;
+    to: Vector;
+}
+
+export interface Vector {
+    x: number;
+    y: number;
+}
+
+export interface RaceTrack {
+    walls: Line[];
+    height: number;
+    width: number;
+    goalLine: Line[];
+    startPositions: Vector[];
 }
